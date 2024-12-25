@@ -1,0 +1,126 @@
+type: custom:button-card
+entity: sensor.##REPLACE##_laundry_machine_state
+name: Washer
+show_label: true
+styles:
+  card:
+    - padding: 20px
+    - height: 180px
+    - background: >-
+        linear-gradient(157deg, rgba(246,220,131,1) 0%, rgba(247,139,243,1)
+        100%)
+    - border-radius: 0px
+  grid:
+    - grid-template-areas: "\"i program\" \"n stat2\" \"bar bar\" \"stat1 stat3\""
+    - grid-template-columns: 1fr 1fr
+    - grid-template-rows: 70px min-content 40px min-content
+  name:
+    - justify-self: start
+    - font-size: 14px
+    - opacity: 0.7
+    - color: black
+    - font-weight: 700
+  label:
+    - justify-self: start
+    - font-size: 16px
+    - font-weight: 500
+    - color: black
+  icon:
+    - width: 34px
+    - color: black
+  img_cell:
+    - justify-self: start
+    - align-self: start
+    - width: 34px
+    - height: 34px
+  custom_fields:
+    program:
+      - justify-self: end
+      - align-self: end
+      - padding-bottom: 6px
+      - font-size: 16px
+      - font-weight: 500
+      - color: black
+    stat1:
+      - justify-self: start
+      - font-size: 10px
+      - opacity: 0.7
+      - color: black
+    stat2:
+      - justify-self: end
+      - font-size: 16px
+      - padding-bottom: 6px
+      - font-weight: 500
+      - color: black
+      - opacity: 0.8
+    stat3:
+      - justify-self: end
+      - font-size: 10px
+      - opacity: 0.7
+      - color: black
+    bar:
+      - justify-self: start
+      - width: 100%
+      - border-radius: 6px
+      - background: black
+      - height: 12px
+custom_fields:
+  bar: |
+    [[[  
+      var state_tr = states['sensor.##REPLACE##_laundry_time_remaining'].state;
+
+      // Split state_tr into hours and minutes
+      var timeParts = state_tr.split(':');
+      var minutes = parseInt(timeParts[0]) * 60; // Convert hours to minutes
+      var seconds = parseInt(timeParts[1]); // Remaining seconds
+
+      // Convert total time remaining to seconds
+      var totalSeconds = minutes + seconds;
+
+      // Temporarily using static value for initial (59 minutes)
+      var initial = 59
+
+      // Calculate percentage
+      var percentage = (totalSeconds / initial) * 100;
+
+      // Return the progress bar HTML
+      return `<div><div style="background:white; height: 12px; width:${percentage}%;"></div></div>`; 
+    ]]]
+  program: |
+    [[[
+      var state_p0 = states['sensor.##REPLACE##_laundry_cycle'].state
+      var state_p1 = states['sensor.##REPLACE##_laundry_machine_state'].state;
+      var state_p2 = states['sensor.##REPLACE##_laundry_sub_cycle'].state;
+
+      return state_p0 + ' · ' + state_p1 + ' · ' + state_p2;
+      
+    ]]]
+  stat1: "0:00"
+  stat2: |
+    [[[ 
+      var state_tr = states['sensor.##REPLACE##_laundry_time_remaining'].state;
+
+      // Split state_tr into hours and minutes
+      var timeParts = state_tr.split(':');
+      var hours = parseInt(timeParts[0]);
+      var minutes = parseInt(timeParts[1]);
+
+      // Convert to total minutes
+      var totalMinutes = (hours * 60) + minutes;
+
+      // Return formatted string with correct grammar
+      return totalMinutes > 1 ? `${totalMinutes} minutes remaining` : `${totalMinutes} minute remaining`;
+    ]]]
+  stat3: |
+    [[[ 
+      // Commented out logic for initial
+      // var state_delay = states['sensor.laundry_time_remaining_initial'].state;
+
+      // Temporarily using static value for initial (59 minutes)
+      var state_delay = 59 * 60; // 59 minutes in seconds
+      
+      // Format state_delay as H:MM
+      var hours = Math.floor(state_delay / 3600);
+      var minutes = Math.floor((state_delay % 3600) / 60);
+      return `${hours}:${minutes.toString().padStart(2, '0')}`;
+    ]]]
