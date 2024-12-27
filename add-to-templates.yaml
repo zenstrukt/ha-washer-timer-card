@@ -1,0 +1,5 @@
+- sensor:
+    - name: "Static Initial Laundry Time"
+      state: "{{ states('sensor.##REPLACE##_laundry_time_remaining') }}"
+      icon: mdi:timer
+      availability: "{{ states('sensor.##REPLACE##_laundry_time_remaining') not in ['unknown', 'unavailable'] }}"
