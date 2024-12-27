@@ -67,24 +67,37 @@ styles:
 custom_fields:
   bar: |
     [[[  
+      // Function to convert time string (H:MM) to total seconds
+      function timeStringToSeconds(timeString) {
+        if (!timeString) return 0; // Return 0 for invalid or empty input
+        var timeParts = timeString.split(':');
+        if (timeParts.length !== 2) return 0; // Ensure valid format
+        var minutes = parseInt(timeParts[0], 10) * 60; // Convert hours to minutes
+        var seconds = parseInt(timeParts[1], 10); // Remaining seconds
+        return minutes + seconds; // Total seconds
+      }
+
+      // Get the state of the time remaining and initial time sensors
       var state_tr = states['sensor.##REPLACE##_laundry_time_remaining'].state;
+      var initial = states['sensor.static_initial_laundry_time'].state;
 
-      // Split state_tr into hours and minutes
-      var timeParts = state_tr.split(':');
-      var minutes = parseInt(timeParts[0]) * 60; // Convert hours to minutes
-      var seconds = parseInt(timeParts[1]); // Remaining seconds
+      // Convert both time values to total seconds
+      var totalSeconds = timeStringToSeconds(state_tr);
+      var initialSeconds = timeStringToSeconds(initial);
 
-      // Convert total time remaining to seconds
-      var totalSeconds = minutes + seconds;
-
-      // Temporarily using static value for initial (59 minutes)
-      var initial = 59
+      // Ensure both values are valid
+      if (totalSeconds <= 0 || initialSeconds <= 0) {
+        return `<div><div style="background: white; height: 12px; width: 0%;"></div></div>`; // Default bar
+      }
 
       // Calculate percentage
-      var percentage = (totalSeconds / initial) * 100;
+      var percentage = (totalSeconds / initialSeconds) * 100;
 
+      // Clamp percentage between 0 and 100
+      percentage = Math.min(Math.max(percentage, 0), 100);
+      
       // Return the progress bar HTML
-      return `<div><div style="background:white; height: 12px; width:${percentage}%;"></div></div>`; 
+      return `<div><div style="background: white; height: 12px; width: ${percentage}%;"></div></div>`; 
     ]]]
   program: |
     [[[
@@ -113,14 +126,14 @@ custom_fields:
     ]]]
   stat3: |
     [[[ 
-      // Commented out logic for initial
-      // var state_delay = states['sensor.laundry_time_remaining_initial'].state;
+      var state_delay = states['sensor.static_initial_laundry_time'].state;
 
       // Temporarily using static value for initial (59 minutes)
-      var state_delay = 59 * 60; // 59 minutes in seconds
+      // var state_delay = 59 * 60; // 59 minutes in seconds
       
       // Format state_delay as H:MM
-      var hours = Math.floor(state_delay / 3600);
-      var minutes = Math.floor((state_delay % 3600) / 60);
-      return `${hours}:${minutes.toString().padStart(2, '0')}`;
+      // var hours = Math.floor(state_delay / 3600);
+      // var minutes = Math.floor((state_delay % 3600) / 60);
+      // return `${hours}:${minutes.toString().padStart(2, '0')}`;
+      return state_delay
     ]]]
