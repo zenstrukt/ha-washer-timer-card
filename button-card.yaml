@@ -79,7 +79,7 @@ custom_fields:
 
       // Get the state of the time remaining and initial time sensors
       var state_tr = states['sensor.##REPLACE##_laundry_time_remaining'].state;
-      var initial = states['sensor.static_initial_laundry_time'].state;
+      var initial = states['input_text.static_initial_laundry_time'].state;
 
       // Convert both time values to total seconds
       var totalSeconds = timeStringToSeconds(state_tr);
@@ -104,8 +104,8 @@ custom_fields:
       var state_p0 = states['sensor.##REPLACE##_laundry_cycle'].state
       var state_p1 = states['sensor.##REPLACE##_laundry_machine_state'].state;
       var state_p2 = states['sensor.##REPLACE##_laundry_sub_cycle'].state;
-
-      return state_p0 + ' · ' + state_p1 + ' · ' + state_p2;
+      // + state_p1 + ' · ' 
+      return state_p0 + ' · ' + state_p2;
       
     ]]]
   stat1: "0:00"
@@ -126,7 +126,7 @@ custom_fields:
     ]]]
   stat3: |
     [[[ 
-      var state_delay = states['sensor.static_initial_laundry_time'].state;
+      var state_delay = states['input_text.static_initial_laundry_time'].state;
 
       // Temporarily using static value for initial (59 minutes)
       // var state_delay = 59 * 60; // 59 minutes in seconds
