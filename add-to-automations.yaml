@@ -1,12 +1,29 @@
-- alias: "Set Initial Laundry Time on Cycle Change"
-  description: "Update static initial laundry time when the cycle changes."
-  trigger:
-    - platform: state
-      entity_id: sensor.##REPLACE##_laundry_cycle  # Replace with the actual entity ID for the cycle state
-  condition:
-    - condition: template
-      value_template: "{{ states('sensor.##REPLACE##_laundry_time_remaining') not in ['unknown', 'unavailable'] }}"
-  action:
-    - service: homeassistant.update_entity
-      target:
-        entity_id: sensor.static_initial_laundry_time
+alias: Set Initial Laundry Time on Cycle Change
+description: Update static initial laundry time when the cycle changes.
+triggers:
+  - entity_id:
+      - sensor.##REPLACE##_laundry_cycle
+    trigger: state
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+conditions:
+  - condition: template
+    value_template: >-
+      {{ states('sensor.##REPLACE##_laundry_time_remaining') not in ['unknown',
+      'unavailable'] }}
+    enabled: true
+actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+    enabled: false
+  - target:
+      entity_id: input_text.static_initial_laundry_time
+    data:
+      value: "{{ states('sensor.##REPLACE##_laundry_time_remaining') }}"
+    action: input_text.set_value
+mode: single
