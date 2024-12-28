@@ -9,9 +9,9 @@ Custom Button Card for a Fisher &amp; Paykel Washer. Can be customised to match 
 3. Modify the visibility of the card to show/hide based on your sensor activity to keep it tidy on your dashboard.
 
 ## Optional
-GE appliances do not often have an initial value set for the cycle time. To incorporate this and use with the progress bar dynamically, refer to repo files to add automations & templates.
+GE appliances do not often have an initial value set for the cycle time. To incorporate this and use with the progress bar dynamically, refer to repo files to add automations, configuration & templates.
 
-The below sensor will be made available.
+The below input_text will be made available and referenced in the button card.
 ```
-sensor.static_initial_laundry_time
+input_text.static_initial_laundry_time
 ```
