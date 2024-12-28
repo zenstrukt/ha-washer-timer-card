@@ -1,5 +1,17 @@
 - sensor:
-    - name: "Static Initial Laundry Time"
-      state: "{{ states('sensor.##REPLACE##_laundry_time_remaining') }}"
-      icon: mdi:timer
-      availability: "{{ states('sensor.##REPLACE##_laundry_time_remaining') not in ['unknown', 'unavailable'] }}"
+  - name: "Static Initial Laundry Time"
+    state: >
+      {% set cycle_state = states('sensor.fcb97e78d7e6_laundry_cycle') %}
+      {% set time_remaining = states('sensor.fcb97e78d7e6_laundry_time_remaining') %}
+      {% set last_cycle = states('sensor.static_initial_laundry_time_last_cycle') %}
+      {% if cycle_state != last_cycle and time_remaining not in ['unknown', 'unavailable'] %}
+        {{ time_remaining }}
+      {% else %}
+        {{ states('sensor.static_initial_laundry_time') }}
+      {% endif %}
+    icon: mdi:timer
+    availability: >
+      {{ states('sensor.fcb97e78d7e6_laundry_time_remaining') not in ['unknown', 'unavailable'] }}
+- sensor:
+  - name: "Static Initial Laundry Time Last Cycle"
+    state: "{{ states('sensor.fcb97e78d7e6_laundry_cycle') }}"
