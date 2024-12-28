@@ -1,7 +1,7 @@
 # Washer Timer Card using Custom Button Card template
 Custom Button Card for a Fisher &amp; Paykel Washer. Can be customised to match other sensors.
 
-![image](https://github.com/user-attachments/assets/496588c3-f2be-4f26-9ffc-854b55605431)
+![image](https://github.com/user-attachments/assets/5b5c724c-2e32-4e19-858d-73692557680b)
 
 ## Using the card
 1. Create a new vertial stack card
